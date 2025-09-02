@@ -6,7 +6,8 @@ import pygame
 
 from settings import Settings
 from ship import Ship
-
+from bullet import Bullet
+from alien import Alien
 
 class AlienInvasion:
     def __init__(self):
@@ -19,11 +20,16 @@ class AlienInvasion:
         pygame.display.set_caption('Alien Invasion')
 
         self.ship = Ship(self)
+        self.bullets = pygame.sprite.Group()
+        self.aliens = pygame.sprite.Group()
+
+        self._creat_fleet()
 
     def run_game(self):
         while True:
             self._check_events()
             self.ship.update()
+            self._update_bullets()
             self._update_screen()
             self.clock.tick(60)
 
@@ -44,6 +50,9 @@ class AlienInvasion:
         elif event.key == pygame.K_q:
             # TODO ask if really want to quit
             sys.exit()
+        # TODO continue fire
+        elif event.key == pygame.K_SPACE:
+            self._fire_bullet()
 
     def _check_key_up_events(self, event):
         if event.key == pygame.K_RIGHT:
@@ -60,8 +69,27 @@ class AlienInvasion:
     def _update_screen(self):
         self.screen.fill(self.settings.background_color)
         self.ship.blitme()
+        for bullet in self.bullets.sprites():
+            bullet.draw_bullet()
+        self.aliens.draw(self.screen)
+
         pygame.display.flip()
 
+        
+    def _fire_bullet(self):
+        new_bullet = Bullet(self)
+        self.bullets.add(new_bullet)
+
+    def _update_bullets(self):
+        self.bullets.update()
+
+        for bullet in self.bullets.copy():
+            if bullet.rect.bottom < 0:
+                self.bullets.remove(bullet)
+
+    def _creat_fleet(self):
+        alien = Alien(self)
+        self.aliens.add(alien)
 
 if __name__ == '__main__':
     alien_invasion = AlienInvasion()

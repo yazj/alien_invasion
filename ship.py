@@ -7,12 +7,12 @@ class Ship:
         self.screen = alien_invasion_game.screen
         self.screen_rect = alien_invasion_game.screen.get_rect()
 
-        self.image = pygame.image.load("assets/Example_ships/6B.png")
+        self.image = pygame.image.load("assets/spaceArt/png/player.png")
         self.rect = self.image.get_rect()
         self.rect.midbottom = self.screen_rect.midbottom
 
         self.flag_moving = 0
-        self.ship_speed = 6
+        self.ship_speed = alien_invasion_game.settings.ship_speed
 
     def blitme(self):
         self.screen.blit(self.image, self.rect)
